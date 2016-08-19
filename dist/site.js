@@ -26144,7 +26144,11 @@ module.exports = function(context) {
         context.dispatch.on('change.json', function(event) {
             if (event.source !== 'json') {
                 var scrollInfo = editor.getScrollInfo();
-                editor.setValue(JSON.stringify(context.data.get('map'), null, 2));
+                var spaceLess = true; //gotjoshua: this needs to be togglable from the UI
+		var stringValue = (spaceLess)
+			? JSON.stringify(context.data.get('map'), null, 2).replace(/ /g, '').replace(/\n/g,'').replace(/\[\{/g,"[\n{").replace(/\,\{/g,",\n{").replace(/\}\]\}/g,"}\n]}")
+			: JSON.stringify(context.data.get('map'), null, 2);
+              	editor.setValue(stringValue);
                 editor.scrollTo(scrollInfo.left, scrollInfo.top);
             }
         });
